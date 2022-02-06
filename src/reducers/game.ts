@@ -46,12 +46,64 @@ function getLobbyPlayers(
   };
 }
 
+function updateIsReady(
+  state: IGameState,
+  { payload }: IGameAction
+): IGameState {
+  const localPlayer = state.lobbyState?.localPlayer;
+  const remotePlayers = state.lobbyState?.remotePlayers;
+  const [uuid, isReady]: [string, boolean] = payload;
+
+  if (localPlayer && localPlayer.uuid === uuid) {
+    return {
+      ...state,
+      lobbyState: {
+        ...state.lobbyState,
+        localPlayer: {
+          ...localPlayer,
+          isReady,
+        },
+      },
+    };
+  }
+
+  const whichRemotePlayer = state.lobbyState?.remotePlayers?.findIndex(
+    function ({ uuid: remotePlayerUUID }) {
+      return remotePlayerUUID === uuid;
+    }
+  );
+
+  const updatedRemotePlayers = remotePlayers && [...remotePlayers];
+
+  if (
+    whichRemotePlayer &&
+    whichRemotePlayer !== -1 &&
+    updatedRemotePlayers &&
+    updatedRemotePlayers[whichRemotePlayer]
+  ) {
+    updatedRemotePlayers[whichRemotePlayer] = {
+      ...updatedRemotePlayers[whichRemotePlayer],
+      isReady,
+    };
+  }
+
+  return {
+    ...state,
+    lobbyState: {
+      ...state.lobbyState,
+      remotePlayers: updatedRemotePlayers,
+    },
+  };
+}
+
 export default function (state: IGameState, action: IGameAction): IGameState {
   switch (action.type) {
     case GameActionTypes.JOIN_SERVER:
       return joinServer(state, action);
     case GameActionTypes.GET_LOBBY_PLAYERS:
       return getLobbyPlayers(state, action);
+    case GameActionTypes.UPDATE_IS_READY:
+      return updateIsReady(state, action);
     default:
       return state;
   }
