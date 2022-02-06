@@ -31,4 +31,7 @@ module.exports = {
     }),
     new MiniCssExtractPlugin(),
   ],
+  devServer: {
+    allowedHosts: ['hns.calebjett.net', 'calebjett.net'],
+  },
 };
