@@ -5,7 +5,7 @@ import loadUUID from '../utilities/loadUUID';
 import IServer from '../models/IServer';
 import WebSocketContext from '../contexts/WebSocketContext';
 import GameStateContext from '../contexts/GameStateContext';
-import GameContainer from './GameContainer';
+import GameContainer from './Game/GameContainer';
 import ServerBrowserContainer from './ServerBrowser/ServerBrowserContainer';
 
 interface Props {}

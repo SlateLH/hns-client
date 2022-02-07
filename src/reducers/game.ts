@@ -89,6 +89,21 @@ function updateIsReady(
   };
 }
 
+function chat(state: IGameState, { payload }: IGameAction): IGameState {
+  const [sender, message, time]: [string, string, string] = payload;
+  const chatMessages = state.chatMessages || [];
+
+  const updatedChatMessages = chatMessages && [
+    { sender, message, time },
+    ...chatMessages,
+  ];
+
+  return {
+    ...state,
+    chatMessages: updatedChatMessages,
+  };
+}
+
 export default function (state: IGameState, action: IGameAction): IGameState {
   switch (action.type) {
     case GameActionTypes.JOIN_SERVER:
@@ -97,6 +112,8 @@ export default function (state: IGameState, action: IGameAction): IGameState {
       return getLobbyPlayers(state, action);
     case GameActionTypes.UPDATE_IS_READY:
       return updateIsReady(state, action);
+    case GameActionTypes.CHAT:
+      return chat(state, action);
     default:
       return state;
   }

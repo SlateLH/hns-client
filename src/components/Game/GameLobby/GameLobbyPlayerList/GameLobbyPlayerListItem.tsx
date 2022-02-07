@@ -1,6 +1,6 @@
 import React from 'react';
 
-import IGameLobbyPlayer from '../../../models/game/lobby/IGameLobbyPlayer';
+import IGameLobbyPlayer from '../../../../models/game/lobby/IGameLobbyPlayer';
 
 interface Props {
   index: number;
