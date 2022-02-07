@@ -12,7 +12,7 @@ function GameLobbyPlayerList({ localPlayer, remotePlayers }: Props) {
   const players = [localPlayer, ...remotePlayers];
 
   return (
-    <ul className="border border-gray-500 mt-5">
+    <ul className="border border-gray-500 mt-2">
       {players.map(function (player, index) {
         return (
           <GameLobbyPlayerListItem

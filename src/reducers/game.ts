@@ -67,25 +67,18 @@ function updateIsReady(
     };
   }
 
-  const whichRemotePlayer = state.lobbyState?.remotePlayers?.findIndex(
-    function ({ uuid: remotePlayerUUID }) {
-      return remotePlayerUUID === uuid;
-    }
-  );
+  const updatedRemotePlayers =
+    remotePlayers &&
+    [...remotePlayers].map(function (player) {
+      if (player?.uuid === uuid) {
+        return {
+          ...player,
+          isReady,
+        };
+      }
 
-  const updatedRemotePlayers = remotePlayers && [...remotePlayers];
-
-  if (
-    whichRemotePlayer &&
-    whichRemotePlayer !== -1 &&
-    updatedRemotePlayers &&
-    updatedRemotePlayers[whichRemotePlayer]
-  ) {
-    updatedRemotePlayers[whichRemotePlayer] = {
-      ...updatedRemotePlayers[whichRemotePlayer],
-      isReady,
-    };
-  }
+      return player;
+    });
 
   return {
     ...state,

@@ -20,10 +20,6 @@ function GameLobbyContainer({ lobbyState }: Props) {
 
   return localPlayer ? (
     <div>
-      <GameLobbyPlayerList
-        localPlayer={localPlayer}
-        remotePlayers={remotePlayers || []}
-      />
       <input
         className="mr-2 mt-2"
         type="checkbox"
@@ -34,6 +30,10 @@ function GameLobbyContainer({ lobbyState }: Props) {
       <label className="text-white" htmlFor="ready-checkbox">
         Ready
       </label>
+      <GameLobbyPlayerList
+        localPlayer={localPlayer}
+        remotePlayers={remotePlayers || []}
+      />
     </div>
   ) : null;
 }
