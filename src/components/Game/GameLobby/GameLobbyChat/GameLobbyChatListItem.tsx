@@ -15,7 +15,7 @@ function GameLobbyChatListItem({ index, chatMessage }: Props) {
           .split(' ')[0]
           .toLowerCase()}-500`}
       >
-        {chatMessage.sender}
+        {`${chatMessage.isLeader ? '⭐ ' : ''}${chatMessage.sender}`}
       </h5>
       <p>{chatMessage.message}</p>
       <h6 className="font-light text-xs text-gray-400 text-right">

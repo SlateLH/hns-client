@@ -3,7 +3,7 @@ import IGameState from '../models/game/IGameState';
 import IGameLobbyPlayer from '../models/game/lobby/IGameLobbyPlayer';
 
 function joinServer(state: IGameState, { payload }: IGameAction): IGameState {
-  const [uuid, name]: [string, string] = payload;
+  const [uuid, name, isLeader]: [string, string, boolean] = payload;
 
   return {
     ...state,
@@ -13,6 +13,7 @@ function joinServer(state: IGameState, { payload }: IGameAction): IGameState {
         uuid,
         name,
         isReady: false,
+        isLeader,
       },
       canStart: false,
     },
@@ -25,22 +26,33 @@ function getLobbyPlayers(
 ): IGameState {
   const localPlayerUUID = state.lobbyState?.localPlayer?.uuid;
 
-  const remotePlayers: IGameLobbyPlayer[] = payload[0]
-    .map(function ([uuid, name, isReady]: [string, string, boolean]) {
-      return {
-        uuid,
-        name,
-        isReady,
-      };
-    })
-    .filter(function ({ uuid }: IGameLobbyPlayer) {
-      return uuid !== localPlayerUUID;
-    });
+  const players: IGameLobbyPlayer[] = payload[0].map(function ([
+    uuid,
+    name,
+    isReady,
+    isLeader,
+  ]: [string, string, boolean, boolean]) {
+    return {
+      uuid,
+      name,
+      isReady,
+      isLeader,
+    };
+  });
+
+  const localPlayer = players.find(function ({ uuid }) {
+    return uuid === localPlayerUUID;
+  });
+
+  const remotePlayers = players.filter(function ({ uuid }) {
+    return uuid !== localPlayerUUID;
+  });
 
   return {
     ...state,
     lobbyState: {
       ...state.lobbyState,
+      localPlayer,
       remotePlayers,
     },
   };
@@ -93,8 +105,15 @@ function chat(state: IGameState, { payload }: IGameAction): IGameState {
   const [sender, message, time]: [string, string, string] = payload;
   const chatMessages = state.chatMessages || [];
 
+  const player =
+    state.lobbyState?.localPlayer?.name === sender
+      ? state.lobbyState?.localPlayer
+      : state.lobbyState?.remotePlayers?.find(function (player) {
+          return player?.name === sender;
+        });
+
   const updatedChatMessages = chatMessages && [
-    { sender, message, time },
+    { sender, message, time, isLeader: player?.isLeader || false },
     ...chatMessages,
   ];
 
