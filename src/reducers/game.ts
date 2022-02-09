@@ -123,6 +123,33 @@ function chat(state: IGameState, { payload }: IGameAction): IGameState {
   };
 }
 
+function initStartGame(state: IGameState, action: IGameAction): IGameState {
+  return {
+    ...state,
+    lobbyState: {
+      ...state.lobbyState,
+      starting: true,
+    },
+  };
+}
+
+function cancelStartGame(state: IGameState, action: IGameAction): IGameState {
+  return {
+    ...state,
+    lobbyState: {
+      ...state.lobbyState,
+      starting: false,
+    },
+  };
+}
+
+function startGame(state: IGameState, action: IGameAction): IGameState {
+  return {
+    ...state,
+    started: true,
+  };
+}
+
 export default function (state: IGameState, action: IGameAction): IGameState {
   switch (action.type) {
     case GameActionTypes.JOIN_SERVER:
@@ -133,6 +160,12 @@ export default function (state: IGameState, action: IGameAction): IGameState {
       return updateIsReady(state, action);
     case GameActionTypes.CHAT:
       return chat(state, action);
+    case GameActionTypes.INIT_START_GAME:
+      return initStartGame(state, action);
+    case GameActionTypes.CANCEL_START_GAME:
+      return cancelStartGame(state, action);
+    case GameActionTypes.START_GAME:
+      return startGame(state, action);
     default:
       return state;
   }

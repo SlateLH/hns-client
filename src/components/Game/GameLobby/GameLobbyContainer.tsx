@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 
 import useWebSocket from '../../../hooks/useWebSocket';
 import IGameChatMessage from '../../../models/game/IGameChatMessage';
@@ -10,19 +10,38 @@ import GameLobbyPlayerList from './GameLobbyPlayerList/GameLobbyPlayerList';
 interface Props {
   chatMessages: IGameChatMessage[];
   lobbyState: IGameLobbyState;
+  areAllPlayersReady?: boolean;
 }
 
-function GameLobbyContainer({ chatMessages, lobbyState }: Props) {
+function GameLobbyContainer({
+  chatMessages,
+  lobbyState,
+  areAllPlayersReady,
+}: Props) {
   const { localPlayer, remotePlayers } = lobbyState;
   const webSocket = useWebSocket();
 
-  const areAllPlayersReady =
-    localPlayer?.isReady && remotePlayers?.every(player => player.isReady);
+  useEffect(
+    function () {
+      if (!areAllPlayersReady && lobbyState.starting) {
+        webSocket?.send(JSON.stringify({ req: [['cancel_start_game']] }));
+      }
+    },
+    [areAllPlayersReady]
+  );
 
   function onReadyCheckboxToggle() {
     webSocket?.send(
       JSON.stringify({ req: [['update_is_ready', !localPlayer?.isReady]] })
     );
+  }
+
+  function onStartButtonClick() {
+    if (lobbyState.starting) {
+      webSocket?.send(JSON.stringify({ req: [['cancel_start_game']] }));
+    } else {
+      webSocket?.send(JSON.stringify({ req: [['init_start_game']] }));
+    }
   }
 
   return localPlayer ? (
@@ -43,9 +62,9 @@ function GameLobbyContainer({ chatMessages, lobbyState }: Props) {
           </div>
           {localPlayer?.isLeader && (
             <Button
-              text="Start Game"
-              disabled={!areAllPlayersReady}
-              onClick={function () {}}
+              text={lobbyState.starting ? 'Cancel start' : 'Start game'}
+              disabled={!areAllPlayersReady && !lobbyState.starting}
+              onClick={onStartButtonClick}
             />
           )}
         </div>

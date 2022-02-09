@@ -7,11 +7,13 @@
     "start": "yarn run build && webpack serve"
   },
   "dependencies": {
+    "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/moment": "^2.13.0",
     "@types/node": "^17.0.15",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",

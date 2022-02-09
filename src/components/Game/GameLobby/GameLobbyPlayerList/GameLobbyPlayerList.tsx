@@ -9,11 +9,12 @@ interface Props {
 }
 
 function GameLobbyPlayerList({ localPlayer, remotePlayers }: Props) {
-  const players = [localPlayer, ...remotePlayers];
-
   return (
-    <ul className="border border-gray-500 mt-2">
-      {players.map(function (player, index) {
+    <ul className="mt-2">
+      <div className="mb-4">
+        <GameLobbyPlayerListItem index={0} player={localPlayer} />
+      </div>
+      {remotePlayers.map(function (player, index) {
         return (
           <GameLobbyPlayerListItem
             index={index}
