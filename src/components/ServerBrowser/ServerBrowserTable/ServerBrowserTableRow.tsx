@@ -1,6 +1,7 @@
 import React from 'react';
 
 import IServer from '../../../models/IServer';
+import Button from '../../../ui/Button';
 
 interface Props {
   index: number;
@@ -23,12 +24,7 @@ function ServerBrowserTableRow({ index, server, onServerJoin }: Props) {
     >
       <td className="font-semibold text-center">{name}</td>
       <td>
-        <button
-          className="border border-gray-400 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 transition px-5 py-1 rounded"
-          onClick={onJoinButtonClick}
-        >
-          Join Server
-        </button>
+        <Button text="Join Server" onClick={onJoinButtonClick} />
       </td>
     </tr>
   );
